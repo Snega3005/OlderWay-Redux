@@ -1,43 +1,27 @@
-import {createStore} from 'redux';
+import { configureStore, createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-    user:{
-        username: 'AK',
+const userSlice = createSlice ({
+    name: "user",
+    initialState: {
+        username: "Snega",
         balance: 25000
-    }
-}
-
-export const addMoney = (amt) => ({
-    type: 'addMoney',
-    payload: amt
-})
-
-export const debitMoney = (payload) => ({
-    type: 'debitMoney',
-    payload: payload
-})
-
-function reducer(state = initialState, action) {
-    switch(action.type) {
-        case 'addMoney':
-            return {
-                user:{
-                    username: state.user.username,
-                    balance: state.user.balance + action.payload
-                }
-            };
-        case 'debitMoney':
-            return {
-                user:{
-                    username: state.user.username,
-                    balance: state.user.balance - action.payload
-                }
-            };
-        default: {
-            return state;
+    },
+    reducers: {
+        addMoney: (state, action) => {
+            state.balance += action.payload;
+        },
+        debitMoney: (state, action) => {
+            state.balance -= action.payload;
         }
     }
-}
+});
 
-const store = createStore(reducer)
+//Exporting the action
+export const { addMoney, debitMoney} = userSlice.actions;
+
+//Correctly setting up the reducer in the store
+const store = configureStore ({
+    reducer: {user: userSlice.reducer}
+});
+
 export default store;
